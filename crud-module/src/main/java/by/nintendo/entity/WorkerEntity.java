@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,17 +24,20 @@ public class WorkerEntity extends AbstractEntity {
     @Column(name = "worker_id")
     private Long id;
     @Column(name = "name")
-    @NotNull
-    @Max(value = 5, message = "!!!!!!!!")
+//    @NotNull
+//    @Max(value = 5, message = "!!!!!!!!")
     private String name;
     @Column(name = "last_name")
     private String lastName;
     @Column(name = "position")
     private String position;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "worker")
+    @OneToMany(mappedBy = "worker")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<WorkedHoursEntity> workHours;
     @ManyToOne
-    @JoinColumn(name = "departments_id")
+    @JoinTable(name = "warkers_department",
+            joinColumns = @JoinColumn(name = "worker_id"),
+            inverseJoinColumns = @JoinColumn(name = "departments_id"))
     private DepartmentEntity department;
 
     @Override

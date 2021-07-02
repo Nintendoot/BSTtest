@@ -12,6 +12,7 @@ import by.nintendo.Response;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -36,22 +37,39 @@ public class WorkersController {
                 stringBuilder.append(fieldError.getField() + " - " + fieldError.getDefaultMessage());
             }
             response.setErrors(stringBuilder.toString());
-            return response;
+
+        }else{
+            workersService.createWorker(workerEntity);
+            List<WorkerModel> a = new ArrayList<>();
+            a.add(workerMapper.toModel(workerEntity));
+            response.setEntities(a);
         }
-        workersService.createWorker(workerEntity);
-        List<WorkerModel> a = new ArrayList<>();
-        a.add(workerMapper.toModel(workerEntity));
-        response.setEntities(a);
+
         return response;
     }
 
     @GetMapping
-    private Response getAll() {
+    public Response getAll() {
         Response response = new Response();
         response.setEntities(workersService.getAll());
         response.setErrors("OK");
 
         return response;
+    }
+
+    @GetMapping(path = "/{id}")
+    public Response getWarkerById(@PathVariable("id") Long id){
+        Response response = new Response();
+        response.setErrors("ok");
+        response.setEntities(Collections.singletonList(workersService.getById(id)));
+        return response;
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public Response deleteWorkerById(@PathVariable("id") Long id){
+
+            workersService.deleteById(id);
+     return new Response();
     }
 
 

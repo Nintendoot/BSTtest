@@ -37,7 +37,7 @@ public class WorkerMapper extends AbstractMapper<WorkerModel, WorkerEntity> {
     }
 
     private String getDepartment(WorkerEntity source) {
-        return Objects.isNull(source.getId()) ? null : source.getDepartment().getName();
+        return Objects.isNull(source) || Objects.isNull(source.getId()) ? null : source.getDepartment().getName();
     }
 
     @Override

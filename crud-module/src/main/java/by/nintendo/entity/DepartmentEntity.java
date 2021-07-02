@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class DepartmentEntity extends AbstractEntity {
     private Long id;
     @Column(name = "name")
     private String name;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "department")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "department")
     private List<WorkerEntity> workers;
 
 
