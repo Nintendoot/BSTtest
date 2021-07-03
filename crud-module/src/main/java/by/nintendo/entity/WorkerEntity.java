@@ -8,8 +8,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = false)
@@ -23,15 +23,23 @@ public class WorkerEntity extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "worker_id")
     private Long id;
+
     @Column(name = "name")
-//    @NotNull
-//    @Max(value = 5, message = "!!!!!!!!")
+    @NotEmpty(message = "The field name is empty")
+    @Pattern(regexp = "[A-Za-z]{2,10}", message = "должен быть больше 2 и меньше 10 и содержать только латинские символы")
     private String name;
+
     @Column(name = "last_name")
+    @NotEmpty(message = "Еhe field lastName is empty")
+    @Pattern(regexp = "[A-Za-z]{4,10}", message = " должен быть больше 4 и меньше 10 и содержать только латинские символы")
     private String lastName;
+
     @Column(name = "position")
+    @NotEmpty(message = "Еhe field position is empty")
+    @Pattern(regexp = "[A-Za-z]{4,10}", message = "должен быть больше 4 и меньше 10 и содержать только латинские символы")
     private String position;
-    @OneToMany(mappedBy = "worker")
+
+    @OneToMany(mappedBy = "worker",cascade = CascadeType.REMOVE)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<WorkedHoursEntity> workHours;
     @ManyToOne

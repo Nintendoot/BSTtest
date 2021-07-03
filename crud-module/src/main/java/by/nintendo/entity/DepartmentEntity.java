@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,7 +23,7 @@ public class DepartmentEntity extends AbstractEntity {
     private Long id;
     @Column(name = "name")
     private String name;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "department")
+    @OneToMany(mappedBy = "department",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     private List<WorkerEntity> workers;
 
 

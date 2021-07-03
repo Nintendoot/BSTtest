@@ -1,6 +1,7 @@
 package by.nintendo.service;
 
 import by.nintendo.entity.WorkerEntity;
+import by.nintendo.exception.WorkerNotFoundException;
 import by.nintendo.mapper.WorkerMapper;
 import by.nintendo.model.WorkerModel;
 import by.nintendo.repository.WorkersRepository;
@@ -15,29 +16,29 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class WorkersService {
-    @Autowired
-    private WorkerMapper workerMapper;
+    private final WorkerMapper workerMapper;
     private final WorkersRepository workersRepository;
 
-    public WorkersService(WorkersRepository workersRepository) {
+    public WorkersService(WorkersRepository workersRepository, WorkerMapper workerMapper) {
         this.workersRepository = workersRepository;
+        this.workerMapper = workerMapper;
     }
 
     public WorkerModel createWorker(WorkerEntity worker) {
-        log.info("createWorker(worker:" + worker + ") ");
+        log.info("Call method: createWorker(Worker: " + worker + ") ");
         workersRepository.save(worker);
         return workerMapper.toModel(worker);
     }
 
     public List<WorkerModel> getAll() {
-        return workersRepository.findAll().stream().map(x -> workerMapper.toModel(x)).collect(Collectors.toList());
+        return workersRepository.findAll().stream().map(workerMapper::toModel).collect(Collectors.toList());
     }
-    public WorkerModel getById(Long id){
+    public WorkerEntity getById(Long id){
         Optional<WorkerEntity> worker = workersRepository.findById(id);
         if(worker.isPresent()){
-            return workerMapper.toModel(worker.get());
+            return worker.get();
         }else{
-            throw new NullPointerException();
+            throw new WorkerNotFoundException("Worker not found.");
         }
 
     }
@@ -46,10 +47,10 @@ public class WorkersService {
         Optional<WorkerEntity> worker = workersRepository.findById(id);
         if(worker.isPresent()){
             WorkerModel workerModel = workerMapper.toModel(worker.get());
-            workersRepository.delete(worker.get());
+            workersRepository.deleteById(id);
             return workerModel;
         }else{
-            return null;
+            throw new WorkerNotFoundException("Worker not found.");
         }
     }
 }

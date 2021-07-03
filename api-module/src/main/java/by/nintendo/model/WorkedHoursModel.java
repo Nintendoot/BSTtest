@@ -18,4 +18,6 @@ public class WorkedHoursModel extends AbstractModel {
     private LocalDateTime startWork;
 
     private LocalDateTime endWork;
+
+    private String worker;
 }

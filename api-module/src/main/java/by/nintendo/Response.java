@@ -11,16 +11,17 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class Response <M extends AbstractModel> {
 
-    private String errors;
+    private String status;
 
-    private List<WorkerModel> entities;
+    private List<M> entities;
+
 
     @Override
     public String toString() {
         return "Response{" +
-                "errors='" + errors + '\n' +
+                "status='" + status + '\'' +
                 ", entities=" + entities +
                 '}';
     }
