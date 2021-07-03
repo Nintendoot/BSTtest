@@ -3,9 +3,12 @@ package by.nintendo.controller;
 import by.nintendo.Status;
 import by.nintendo.entity.WorkerEntity;
 import by.nintendo.mapper.WorkerMapper;
+import by.nintendo.model.DepartmentModel;
 import by.nintendo.model.WorkerModel;
-import by.nintendo.service.WorkersService;
+import by.nintendo.service.WorkersImplService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +22,17 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/workers")
 public class WorkersController {
-    private final WorkersService workersService;
-    private final WorkerMapper workerMapper;
 
-    public WorkersController(WorkersService workersService, WorkerMapper workerMapper) {
-        this.workersService = workersService;
-        this.workerMapper = workerMapper;
+    private final WorkersImplService workersImplService;
+@Autowired
+private WorkerMapper workerMapper;
+
+    public WorkersController(@Qualifier("workersService") WorkersImplService workersImplService) {
+        this.workersImplService = workersImplService;
     }
 
-
     @PostMapping
-    public Response<WorkerModel> create(@Valid @RequestBody WorkerEntity workerEntity, BindingResult result) {
+    public Response<WorkerModel> createOrUpdate(@Valid @RequestBody WorkerEntity workerEntity, BindingResult result) {
         log.info("POST request /workers");
         Response<WorkerModel> response = new Response<>();
         if (result.hasErrors()) {
@@ -43,9 +46,9 @@ public class WorkersController {
             response.setEntities(Collections.singletonList(workerMapper.toModel(workerEntity)));
             log.info("POST request hasErrors." + stringBuilder.toString());
         } else {
-            WorkerModel worker = workersService.createWorker(workerEntity);
+            WorkerModel workerModel = workersImplService.createOrUpdate(workerEntity);
             response.setStatus(Status.CREATED.getName());
-            response.setEntities(Collections.singletonList(worker));
+            response.setEntities(Collections.singletonList(workerModel));
         }
         return response;
     }
@@ -54,12 +57,8 @@ public class WorkersController {
     public Response<WorkerModel> getAll() {
         log.info("GET request /workers");
         Response<WorkerModel> response = new Response<>();
-        if (workersService.getAll().isEmpty()) {
-            log.info("GET request hasErrors.");
-            response.setStatus(Status.BAD.getName());
-        }
         response.setStatus(Status.OK.getName());
-        List<WorkerModel> list = workersService.getAll();
+        List<WorkerModel> list = workersImplService.getAll();
         response.setEntities(list);
         return response;
     }
@@ -69,14 +68,14 @@ public class WorkersController {
         log.info("GET request /workers/" + id);
         Response<WorkerModel> response = new Response<>();
         response.setStatus(Status.OK.getName());
-        response.setEntities(Collections.singletonList(workersService.getById(id)));
+        response.setEntities(Collections.singletonList(workersImplService.getById(id)));
         return response;
     }
 
     @DeleteMapping(path = "/{id}")
     public Response<WorkerModel> deleteWorkerById(@PathVariable("id") Long id) {
         log.info("DELETE request /workers/" + id);
-        WorkerModel workerModel = workersService.deleteById(id);
+        WorkerModel workerModel = workersImplService.deleteById(id);
         return new Response<>(Status.DELETE.getName(), Collections.singletonList(workerModel));
     }
 }

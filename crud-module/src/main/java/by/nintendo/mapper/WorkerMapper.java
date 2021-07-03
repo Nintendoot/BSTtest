@@ -3,16 +3,14 @@ package by.nintendo.mapper;
 import by.nintendo.entity.WorkerEntity;
 import by.nintendo.model.WorkerModel;
 import by.nintendo.repository.DepartmentRepository;
-import by.nintendo.repository.WorkersRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Objects;
 
 @Component
-public class WorkerMapper extends AbstractMapper<WorkerModel, WorkerEntity> {
+public class WorkerMapper extends AbstractMapper<WorkerEntity, WorkerModel > {
     private final ModelMapper mapper;
     private final DepartmentRepository departmentRepository;
 

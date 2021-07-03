@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DepartmentMapper extends AbstractMapper<DepartmentModel, DepartmentEntity>{
+public class DepartmentMapper extends AbstractMapper<DepartmentEntity, DepartmentModel> {
     @Autowired
     public DepartmentMapper() {
         super(DepartmentEntity.class, DepartmentModel.class);

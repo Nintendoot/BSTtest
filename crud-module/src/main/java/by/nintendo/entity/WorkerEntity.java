@@ -25,18 +25,18 @@ public class WorkerEntity extends AbstractEntity {
     private Long id;
 
     @Column(name = "name")
-    @NotEmpty(message = "The field name is empty")
-    @Pattern(regexp = "[A-Za-z]{2,10}", message = "должен быть больше 2 и меньше 10 и содержать только латинские символы")
+    @NotEmpty(message = "The field name is empty.")
+    @Pattern(regexp = "[A-Za-z]{2,10}", message = "name : должен быть больше 2 и меньше 10 и содержать только латинские символы.")
     private String name;
 
     @Column(name = "last_name")
-    @NotEmpty(message = "Еhe field lastName is empty")
-    @Pattern(regexp = "[A-Za-z]{4,10}", message = " должен быть больше 4 и меньше 10 и содержать только латинские символы")
+    @NotEmpty(message = "Еhe field lastName is empty.")
+    @Pattern(regexp = "[A-Za-z]{4,10}", message = "lastName : должен быть больше 4 и меньше 10 и содержать только латинские символы.")
     private String lastName;
 
     @Column(name = "position")
-    @NotEmpty(message = "Еhe field position is empty")
-    @Pattern(regexp = "[A-Za-z]{4,10}", message = "должен быть больше 4 и меньше 10 и содержать только латинские символы")
+    @NotEmpty(message = "Еhe field position is empty.")
+    @Pattern(regexp = "[A-Za-z]{4,10}", message = "position : должен быть больше 4 и меньше 10 и содержать только латинские символы.")
     private String position;
 
     @OneToMany(mappedBy = "worker",cascade = CascadeType.REMOVE)

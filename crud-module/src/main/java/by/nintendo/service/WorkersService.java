@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class WorkersService {
+public class WorkersService implements WorkersImplService {
     private final WorkerMapper workerMapper;
     private final WorkersRepository workersRepository;
 
@@ -23,19 +23,22 @@ public class WorkersService {
         this.workerMapper = workerMapper;
     }
 
-    public WorkerModel createWorker(WorkerEntity worker) {
-        log.info("Call method: createWorker(Worker: " + worker + ") ");
+    @Override
+    public WorkerModel createOrUpdate(WorkerEntity worker) {
+        log.info("Call method WorkersService: createOrUpdate(Worker: " + worker + ") ");
         workersRepository.save(worker);
         return workerMapper.toModel(worker);
     }
 
+    @Override
     public List<WorkerModel> getAll() {
-        log.info("Call method: getAll()");
+        log.info("Call method WorkersService: getAll()");
         return workersRepository.findAll().stream().map(workerMapper::toModel).collect(Collectors.toList());
     }
 
+    @Override
     public WorkerModel getById(Long id) {
-        log.info("Call method: getById(Id: " + id + ") ");
+        log.info("Call method WorkersService: getById(Id: " + id + ") ");
         Optional<WorkerEntity> worker = workersRepository.findById(id);
         if (worker.isPresent()) {
             return workerMapper.toModel(worker.get());
@@ -44,8 +47,9 @@ public class WorkersService {
         }
     }
 
+    @Override
     public WorkerModel deleteById(Long id) {
-        log.info("Call method: deleteById(Id: " + id + ") ");
+        log.info("Call method WorkersService: deleteById(Id: " + id + ") ");
         Optional<WorkerEntity> worker = workersRepository.findById(id);
         if (worker.isPresent()) {
             WorkerModel workerModel = workerMapper.toModel(worker.get());

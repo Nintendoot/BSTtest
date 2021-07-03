@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 
-public abstract class AbstractMapper<M extends AbstractModel, E extends AbstractEntity> implements Mapper<M, E> {
+public abstract class AbstractMapper<E extends AbstractEntity, M extends AbstractModel> implements Mapper<E, M> {
 
     @Autowired
     ModelMapper mapper;
