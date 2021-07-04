@@ -10,5 +10,4 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 public abstract class AbstractEntity implements Serializable {
-
 }
