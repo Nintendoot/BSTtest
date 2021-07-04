@@ -20,6 +20,7 @@ public class WorkedHoursEntity extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "worked_hours_id")
     private Long id;
+
     @Column(name = "start_work")
     private LocalDateTime startWork;
 

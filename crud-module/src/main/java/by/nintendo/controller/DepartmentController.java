@@ -53,10 +53,12 @@ public class DepartmentController {
                 DepartmentEntity one = departmentImplService.getById(departmentEntity.getId());
                 return response.getResponse(Status.UPDATE.getName(), Collections.singletonList(departmentMapper.toModel(one)));
 
+            }else{
+                departmentImplService.createOrUpdate(departmentEntity);
+                DepartmentEntity byId = repository.findByName(departmentEntity.getName());
+                return response.getResponse(Status.CREATED.getName(), Collections.singletonList(departmentMapper.toModel(byId)));
             }
-            departmentImplService.createOrUpdate(departmentEntity);
-            DepartmentEntity byId = repository.findByName(departmentEntity.getName());
-            return response.getResponse(Status.CREATED.getName(), Collections.singletonList(departmentMapper.toModel(byId)));
+
         }
     }
 

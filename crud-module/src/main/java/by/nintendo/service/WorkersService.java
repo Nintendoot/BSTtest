@@ -1,40 +1,43 @@
 package by.nintendo.service;
 
+import by.nintendo.entity.DepartmentEntity;
 import by.nintendo.entity.WorkerEntity;
+import by.nintendo.exception.DepartmentNotFoundException;
 import by.nintendo.exception.WorkerNotFoundException;
-import by.nintendo.mapper.WorkerMapper;
-import by.nintendo.model.WorkerModel;
+import by.nintendo.repository.DepartmentRepository;
 import by.nintendo.repository.WorkersRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class WorkersService implements WorkersImplService {
-    private final WorkerMapper workerMapper;
     private final WorkersRepository workersRepository;
-
-    public WorkersService(WorkersRepository workersRepository, WorkerMapper workerMapper) {
+@Autowired
+private DepartmentRepository departmentRepository;
+    public WorkersService(WorkersRepository workersRepository) {
         this.workersRepository = workersRepository;
-        this.workerMapper = workerMapper;
     }
 
     @Override
     public void createOrUpdate(WorkerEntity worker) {
         log.info("Call method WorkersService: createOrUpdate(Worker: " + worker + ") ");
-        workersRepository.save(worker);
+        Optional<DepartmentEntity> byId = departmentRepository.findById(worker.getDepartment().getId());
+        if(byId.isPresent()){
+                workersRepository.save(worker);
+        }else {
+            throw new DepartmentNotFoundException("Department not exist.");
+        }
     }
 
     @Override
-    public List<WorkerModel> getAll() {
+    public List<WorkerEntity> getAll() {
         log.info("Call method WorkersService: getAll()");
-        return workersRepository.findAll().stream()
-                .map(workerMapper::toModel)
-                .collect(Collectors.toList());
+        return workersRepository.findAll();
     }
 
     @Override
@@ -42,7 +45,6 @@ public class WorkersService implements WorkersImplService {
         log.info("Call method WorkersService: getById(Id: " + id + ") ");
         Optional<WorkerEntity> worker = workersRepository.findById(id);
         if (worker.isPresent()) {
-//            return workerMapper.toModel(worker.get());
             return worker.get();
         } else {
             throw new WorkerNotFoundException("Worker with id: "+id+"not exist.");
@@ -50,13 +52,11 @@ public class WorkersService implements WorkersImplService {
     }
 
     @Override
-    public WorkerModel deleteById(Long id) {
+    public void deleteById(Long id) {
         log.info("Call method WorkersService: deleteById(Id: " + id + ") ");
         Optional<WorkerEntity> worker = workersRepository.findById(id);
         if (worker.isPresent()) {
-            WorkerModel workerModel = workerMapper.toModel(worker.get());
-            workersRepository.deleteById(id);
-            return workerModel;
+           workersRepository.deleteById(id);
         } else {
             throw new WorkerNotFoundException("Worker with id: "+id+"not exist.");
         }
