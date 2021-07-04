@@ -28,6 +28,5 @@ public class GeneralReportController {
     public void getAll() {
         String url = "http://localhost:8080/department";
         Response<?> response = restTemplate.getForObject(url, Response.class);
-
     }
 }
