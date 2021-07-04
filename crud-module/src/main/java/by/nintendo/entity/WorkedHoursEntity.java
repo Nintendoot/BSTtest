@@ -24,17 +24,12 @@ public class WorkedHoursEntity extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "worked_hours_id")
     private Long id;
-
+//    @NotEmpty(message = "The field startWork is empty.")
     @Column(name = "start_work")
-    @NotEmpty(message = "The field startWork is empty.")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @Pattern(regexp = "(\\d{4})((0[1-9])|(1[0-2]))(0[1-9]|[12][0-9]|3[01])(?:[0-1]?[0-9]|[2][1-4]):[0-5]?[0-9]:[0-5]?[0-9]", message = "Bad format.Good format yyyy/mm/dd hh:mm:ss")
     private LocalDateTime startWork;
 
-    @NotEmpty(message = "The field endWork is empty.")
+//    @NotEmpty(message = "The field endWork is empty.")
     @Column(name = "end_work")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @Pattern(regexp = "(\\d{4})((0[1-9])|(1[0-2]))(0[1-9]|[12][0-9]|3[01])(?:[0-1]?[0-9]|[2][1-4]):[0-5]?[0-9]:[0-5]?[0-9]", message = "Bad format.Good format yyyy/mm/dd hh:mm:ss")
     private LocalDateTime endWork;
 
     @ManyToOne

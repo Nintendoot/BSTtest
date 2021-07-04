@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class WorkedHoursModel extends AbstractModel {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd hh:mm:ss")
     private LocalDateTime startWork;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd hh:mm:ss")
+       @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/mm/dd hh:mm:ss")
     private LocalDateTime endWork;
 
     private String worker;

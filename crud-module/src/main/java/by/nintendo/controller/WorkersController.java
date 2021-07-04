@@ -3,8 +3,8 @@ package by.nintendo.controller;
 import by.nintendo.Status;
 import by.nintendo.entity.WorkerEntity;
 import by.nintendo.mapper.WorkerMapper;
-import by.nintendo.model.DepartmentModel;
 import by.nintendo.model.WorkerModel;
+import by.nintendo.repository.WorkersRepository;
 import by.nintendo.service.WorkersImplService;
 import by.nintendo.util.AbstractResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,6 @@ import by.nintendo.Response;
 
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,7 +26,8 @@ public class WorkersController {
     private final WorkersImplService workersImplService;
 @Autowired
 private WorkerMapper workerMapper;
-
+@Autowired
+private WorkersRepository repository;
     @Autowired
     private AbstractResponse<WorkerModel> response;
 
@@ -38,8 +38,6 @@ private WorkerMapper workerMapper;
     @PostMapping
     public Response<?> createOrUpdate(@Valid @RequestBody WorkerEntity workerEntity, BindingResult result) {
         log.info("POST request /workers");
-//        Response<WorkerModel> response = new Response<>();
-
         if (result.hasErrors()) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(Status.NOT_CREATED.getName()).append(":");
@@ -47,16 +45,12 @@ private WorkerMapper workerMapper;
                 stringBuilder.append(fieldError.getField()).append("-").append(fieldError.getDefaultMessage()).append(".");
             }
             log.info("POST request hasErrors." + stringBuilder.toString());
-//            response.setStatus(stringBuilder.toString());
-            WorkerModel workerModel = workerMapper.toModel(workerEntity);
-//            response.setEntities(Collections.singletonList(workerMapper.toModel(workerEntity)));
-         return   response.getResponse(stringBuilder.toString(),Collections.singletonList(workerModel));
+
+         return   response.getResponse(stringBuilder.toString(),null);
 
         } else {
-            WorkerModel list = workersImplService.createOrUpdate(workerEntity);
-//            response.setStatus(Status.CREATED.getName());
-//            response.setEntities(Collections.singletonList(workerModel));
-          return response.getResponse(Status.CREATED.getName(),Collections.singletonList(list));
+            workersImplService.createOrUpdate(workerEntity);
+          return response.getResponse(Status.CREATED.getName(),null);
         }
     }
 

@@ -5,7 +5,8 @@ public enum Status {
     CREATED("CREATED"),
     OK("OK"),
     BAD("BAD"),
-    DELETE("DELETE");
+    DELETE("DELETE"),
+    UPDATE("UPDATE");
 
 
     private String name;

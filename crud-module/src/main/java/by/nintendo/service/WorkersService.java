@@ -24,12 +24,9 @@ public class WorkersService implements WorkersImplService {
     }
 
     @Override
-    public WorkerModel createOrUpdate(WorkerEntity worker) {
+    public void createOrUpdate(WorkerEntity worker) {
         log.info("Call method WorkersService: createOrUpdate(Worker: " + worker + ") ");
-        WorkerModel workerModel = workerMapper.toModel(worker);
         workersRepository.save(worker);
-
-        return workerModel;
     }
 
     @Override

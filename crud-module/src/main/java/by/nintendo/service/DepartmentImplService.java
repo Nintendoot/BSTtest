@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface DepartmentImplService {
 
-    DepartmentModel createOrUpdate(DepartmentEntity department);
+    void createOrUpdate(DepartmentEntity department);
 
-    List<DepartmentModel> getAll();
+    List<DepartmentEntity> getAll();
 
-    DepartmentModel getById(Long id);
+    DepartmentEntity getById(Long id);
 
-    DepartmentModel deleteById(Long id);
+    void deleteById(Long id);
 }

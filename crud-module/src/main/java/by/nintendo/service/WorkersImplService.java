@@ -1,14 +1,13 @@
 package by.nintendo.service;
 
 import by.nintendo.entity.WorkerEntity;
-import by.nintendo.exception.WorkerNotFoundException;
 import by.nintendo.model.WorkerModel;
 
 import java.util.List;
 
 public interface WorkersImplService {
 
-    WorkerModel createOrUpdate(WorkerEntity worker);
+    void createOrUpdate(WorkerEntity worker);
 
     List<WorkerModel> getAll();
 

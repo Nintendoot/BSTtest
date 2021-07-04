@@ -30,8 +30,8 @@ public class WorkerMapper extends AbstractMapper<WorkerEntity, WorkerModel > {
     }
 
     @Override
-    public void mapSpecificFields(WorkerEntity source, WorkerModel department) {
-        department.setDepartment(getDepartment(source));
+    public void mapSpecificFields(WorkerEntity source, WorkerModel worker) {
+        worker.setDepartment(getDepartment(source));
     }
 
     private String getDepartment(WorkerEntity source) {

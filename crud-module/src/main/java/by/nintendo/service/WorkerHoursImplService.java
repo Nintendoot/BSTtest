@@ -7,7 +7,7 @@ import by.nintendo.model.WorkedHoursModel;
 import java.util.List;
 
 public interface WorkerHoursImplService {
-    WorkedHoursModel createOrUpdate(WorkedHoursEntity workedHours);
+    void createOrUpdate(WorkedHoursEntity workedHours);
 
     List<WorkedHoursModel> getAll();
 

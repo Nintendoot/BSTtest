@@ -36,10 +36,11 @@ public class WorkerEntity extends AbstractEntity {
     @Pattern(regexp = "[A-Za-z]{4,10}", message = "position : должен быть больше 4 и меньше 10 и содержать только латинские символы.")
     private String position;
 
-    @OneToMany(mappedBy = "worker",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "worker",cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<WorkedHoursEntity> workHours;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "warkers_department",
             joinColumns = @JoinColumn(name = "worker_id"),
             inverseJoinColumns = @JoinColumn(name = "departments_id"))
