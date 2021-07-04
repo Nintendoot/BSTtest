@@ -2,6 +2,7 @@ package by.nintendo.controller;
 
 import by.nintendo.exception.DepartmentAlreadyExistException;
 import by.nintendo.exception.DepartmentNotFoundException;
+import by.nintendo.exception.IncorrectDataException;
 import by.nintendo.exception.WorkerNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,5 +27,12 @@ public class ExceptionController {
         log.error("DepartmentAlreadyException" + ex.getMessage());
         return ex.getMessage();
     }
+
+    @ExceptionHandler(IncorrectDataException.class)
+    public String incorrectedData(IncorrectDataException ex) {
+        log.error("IncorrectDataException" + ex.getMessage());
+        return ex.getMessage();
+    }
+
 
 }

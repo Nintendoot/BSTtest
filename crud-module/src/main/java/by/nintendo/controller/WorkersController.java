@@ -24,10 +24,10 @@ import java.util.Collections;
 public class WorkersController {
 
     private final WorkersImplService workersImplService;
-@Autowired
-private WorkerMapper workerMapper;
-@Autowired
-private WorkersRepository repository;
+    @Autowired
+    private WorkerMapper workerMapper;
+    @Autowired
+    private WorkersRepository repository;
     @Autowired
     private AbstractResponse<WorkerModel> response;
 
@@ -46,31 +46,32 @@ private WorkersRepository repository;
             }
             log.info("POST request hasErrors." + stringBuilder.toString());
 
-         return   response.getResponse(stringBuilder.toString(),null);
+            return response.getResponse(stringBuilder.toString(), null);
 
         } else {
             workersImplService.createOrUpdate(workerEntity);
-          return response.getResponse(Status.CREATED.getName(),null);
+            return response.getResponse(Status.CREATED.getName(), null);
         }
     }
 
     @GetMapping
     public Response<?> getAll() {
         log.info("GET request /workers");
-        return response.getResponse(Status.OK.getName(),workersImplService.getAll());
+        return response.getResponse(Status.OK.getName(), workersImplService.getAll());
     }
 
     @GetMapping(path = "/{id}")
     public Response<?> getWorkerById(@PathVariable("id") Long id) {
         log.info("GET request /workers/" + id);
-        return response.getResponse(Status.OK.getName(),Collections.singletonList(workersImplService.getById(id)));
+        WorkerEntity workerEntity = workersImplService.getById(id);
+        return response.getResponse(Status.OK.getName(), Collections.singletonList(workerMapper.toModel(workerEntity)));
     }
 
     @DeleteMapping(path = "/{id}")
     public Response<?> deleteWorkerById(@PathVariable("id") Long id) {
         log.info("DELETE request /workers/" + id);
         WorkerModel workerModel = workersImplService.deleteById(id);
-        return response.getResponse(Status.DELETE.getName(),Collections.singletonList(workerModel));
+        return response.getResponse(Status.DELETE.getName(), Collections.singletonList(workerModel));
     }
 }
 

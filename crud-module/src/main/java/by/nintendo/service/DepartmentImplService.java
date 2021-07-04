@@ -1,7 +1,6 @@
 package by.nintendo.service;
 
 import by.nintendo.entity.DepartmentEntity;
-import by.nintendo.model.DepartmentModel;
 
 import java.util.List;
 

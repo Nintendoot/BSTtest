@@ -2,7 +2,6 @@ package by.nintendo.service;
 
 import by.nintendo.entity.DepartmentEntity;
 import by.nintendo.entity.WorkerEntity;
-import by.nintendo.repository.DepartmentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,8 +16,6 @@ class DepartmentServiceTest {
 
     @Autowired
     private DepartmentService departmentService;
-    @Autowired
-    private DepartmentRepository departmentRepository;
 
     @Test
     void createOrUpdate() {

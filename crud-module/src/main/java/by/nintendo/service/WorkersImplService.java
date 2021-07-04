@@ -11,7 +11,7 @@ public interface WorkersImplService {
 
     List<WorkerModel> getAll();
 
-    WorkerModel getById(Long id);
+    WorkerEntity getById(Long id);
 
     WorkerModel deleteById(Long id);
 }

@@ -1,18 +1,16 @@
 package by.nintendo.service;
 
 import by.nintendo.entity.WorkedHoursEntity;
-import by.nintendo.entity.WorkerEntity;
+import by.nintendo.exception.IncorrectDataException;
 import by.nintendo.exception.WorkerNotFoundException;
 import by.nintendo.mapper.WorkerHoursMapper;
 import by.nintendo.model.WorkedHoursModel;
 import by.nintendo.repository.WorkerHoursRepository;
 import by.nintendo.repository.WorkersRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,21 +29,22 @@ public class WorkerHoursService implements WorkerHoursImplService {
     @Override
     public void createOrUpdate(WorkedHoursEntity hours) {
         log.info("Call method:createOrUpdate(WorkedHours:" + hours + ") ");
-//        Optional<WorkerEntity> byId = workersRepository.findById(hours.getWorker().getId());
-//        if(byId.isPresent()){
-//            if(byId.get().equals(hours.getWorker())){
-//                byId.get().getWorkHours().add(hours);
-//                 workersRepository.save(byId.get());
-//            }
-//        }
-        workerHoursRepository.save(hours);
-
+        Long id = hours.getWorker().getId();
+        if (id != null) {
+            if (workerHoursRepository.existsById(id)) {
+                workerHoursRepository.save(hours);
+            } else {
+                throw new IncorrectDataException("Incorrect Data.Try again.");
+            }
+        } else {
+            throw new WorkerNotFoundException("Worker with id: " + id + "not exist.");
+        }
     }
 
     @Override
-    public List<WorkedHoursModel> getAll() {
+    public List<WorkedHoursEntity> getAll() {
         log.info("Call method WorkedHoursService: getAll().");
-        return workerHoursRepository.findAll().stream().map(workerHoursMapper::toModel).collect(Collectors.toList());
+        return workerHoursRepository.findAll();
     }
 
     @Override
@@ -79,7 +78,6 @@ public class WorkerHoursService implements WorkerHoursImplService {
             return collect.stream()
                     .map(workerHoursMapper::toModel)
                     .collect(Collectors.toList());
-
         } else {
 
             throw new WorkerNotFoundException("Worker with id: " + id + "not exist.");

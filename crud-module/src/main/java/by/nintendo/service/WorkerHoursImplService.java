@@ -9,7 +9,7 @@ import java.util.List;
 public interface WorkerHoursImplService {
     void createOrUpdate(WorkedHoursEntity workedHours);
 
-    List<WorkedHoursModel> getAll();
+    List<WorkedHoursEntity> getAll();
 
     List<WorkedHoursModel> getById(Long id);
 

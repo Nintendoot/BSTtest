@@ -8,7 +8,6 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class WorkerEntity extends AbstractEntity {
     @Pattern(regexp = "[A-Za-z]{4,10}", message = "position : должен быть больше 4 и меньше 10 и содержать только латинские символы.")
     private String position;
 
-    @OneToMany(mappedBy = "worker",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "worker",cascade = CascadeType.REMOVE)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<WorkedHoursEntity> workHours;
 

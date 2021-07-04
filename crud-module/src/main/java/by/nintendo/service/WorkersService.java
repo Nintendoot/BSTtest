@@ -38,11 +38,12 @@ public class WorkersService implements WorkersImplService {
     }
 
     @Override
-    public WorkerModel getById(Long id) {
+    public WorkerEntity getById(Long id) {
         log.info("Call method WorkersService: getById(Id: " + id + ") ");
         Optional<WorkerEntity> worker = workersRepository.findById(id);
         if (worker.isPresent()) {
-            return workerMapper.toModel(worker.get());
+//            return workerMapper.toModel(worker.get());
+            return worker.get();
         } else {
             throw new WorkerNotFoundException("Worker with id: "+id+"not exist.");
         }
