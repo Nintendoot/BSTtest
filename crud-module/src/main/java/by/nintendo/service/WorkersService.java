@@ -26,14 +26,18 @@ public class WorkersService implements WorkersImplService {
     @Override
     public WorkerModel createOrUpdate(WorkerEntity worker) {
         log.info("Call method WorkersService: createOrUpdate(Worker: " + worker + ") ");
+        WorkerModel workerModel = workerMapper.toModel(worker);
         workersRepository.save(worker);
-        return workerMapper.toModel(worker);
+
+        return workerModel;
     }
 
     @Override
     public List<WorkerModel> getAll() {
         log.info("Call method WorkersService: getAll()");
-        return workersRepository.findAll().stream().map(workerMapper::toModel).collect(Collectors.toList());
+        return workersRepository.findAll().stream()
+                .map(workerMapper::toModel)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -43,7 +47,7 @@ public class WorkersService implements WorkersImplService {
         if (worker.isPresent()) {
             return workerMapper.toModel(worker.get());
         } else {
-            throw new WorkerNotFoundException("Worker not found.");
+            throw new WorkerNotFoundException("Worker with id: "+id+"not exist.");
         }
     }
 
@@ -56,7 +60,7 @@ public class WorkersService implements WorkersImplService {
             workersRepository.deleteById(id);
             return workerModel;
         } else {
-            throw new WorkerNotFoundException("Worker not found.");
+            throw new WorkerNotFoundException("Worker with id: "+id+"not exist.");
         }
     }
 }

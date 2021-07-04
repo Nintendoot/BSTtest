@@ -6,6 +6,7 @@ import by.nintendo.entity.WorkedHoursEntity;
 import by.nintendo.mapper.WorkerHoursMapper;
 import by.nintendo.model.WorkedHoursModel;
 import by.nintendo.service.WorkerHoursImplService;
+import by.nintendo.util.AbstractResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,15 +23,17 @@ import java.util.Collections;
 public class WorkedHoursController {
     private final WorkerHoursImplService workerHoursImplService;
     private final WorkerHoursMapper workerHoursMapper;
+    private final AbstractResponse<WorkedHoursModel> response;
 
-    public WorkedHoursController(@Qualifier("workerHoursService") WorkerHoursImplService workerHoursImplService, WorkerHoursMapper workerHoursMapper) {
+    public WorkedHoursController(@Qualifier("workerHoursService") WorkerHoursImplService workerHoursImplService, WorkerHoursMapper workerHoursMapper, AbstractResponse response) {
         this.workerHoursImplService = workerHoursImplService;
         this.workerHoursMapper = workerHoursMapper;
+        this.response = response;
     }
 
     @PostMapping
     public void create(@Valid @RequestBody WorkedHoursEntity workedHoursEntity, BindingResult result) {
-        log.info("POST request /worked_hourse");
+        log.info("POST request /worked_hours");
         Response<WorkedHoursModel> response = new Response<>();
         if (result.hasErrors()) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -51,47 +54,19 @@ public class WorkedHoursController {
 //        return response;
     }
 
+    @DeleteMapping(path = "/{workerId}")
+    public Response<?> deleteWorkedHoursByWorkerId(@PathVariable("workerId") Long id) {
+        return  response.getResponse(Status.DELETE.getName(), workerHoursImplService.deleteById(id));
 
-    @DeleteMapping(path = "/{id}")
-    public Response<WorkedHoursModel> deleteWorkedHourseById(@PathVariable("id") Long id) {
-        Response<WorkedHoursModel> response = new Response<>();
-//        response.setEntities(workerHoursImplService.deleteById(id));
-        response.setStatus(Status.OK.getName());
-        return response;
     }
 
     @GetMapping
-    public Response<WorkedHoursModel> getAll() {
-        Response<WorkedHoursModel> response = new Response<>();
-        response.setEntities(workerHoursImplService.getAll());
-        response.setStatus(Status.OK.getName());
-        return response;
+    public Response<?> getAll() {
+        return response.getResponse(Status.OK.getName(), workerHoursImplService.getAll());
     }
 
     @GetMapping(path = "/{workerId}")
-    public Response<WorkedHoursModel> getAllWorkedHoursForWorker(@PathVariable("workerId") Long id) {
-        Response<WorkedHoursModel> response = new Response<>();
-//        List<WorkedHoursModel> list= workerHoursImplService.getById(id);
-        response.setEntities(workerHoursImplService.getById(id));
-        response.setStatus(Status.OK.getName());
-        return response;
+    public Response<?> getAllWorkedHoursForWorker(@PathVariable("workerId") Long id) {
+         return response.getResponse(Status.OK.getName(), workerHoursImplService.getById(id));
     }
-
-//    @PostMapping
-//    public Response create(@Valid @RequestBody WorkedHoursEntity workerEntity, BindingResult result) {
-//        Response response = new Response();
-//        if (result.hasErrors()) {
-//            StringBuilder stringBuilder = new StringBuilder();
-//            for (FieldError fieldError : result.getFieldErrors()) {
-//                stringBuilder.append(fieldError.getField() + " - " + fieldError.getDefaultMessage());
-//            }
-//            response.setStatus(stringBuilder.toString());
-//
-//        }else{
-//            WorkedHoursModel worker = workerHoursService.createWorkerHours(workerEntity);
-//            response.setEntities(Collections.singletonList(worker));
-//        }
-//
-//        return response;
-//    }
 }

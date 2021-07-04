@@ -6,6 +6,7 @@ import by.nintendo.mapper.WorkerMapper;
 import by.nintendo.model.DepartmentModel;
 import by.nintendo.model.WorkerModel;
 import by.nintendo.service.WorkersImplService;
+import by.nintendo.util.AbstractResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,56 +28,55 @@ public class WorkersController {
 @Autowired
 private WorkerMapper workerMapper;
 
+    @Autowired
+    private AbstractResponse<WorkerModel> response;
+
     public WorkersController(@Qualifier("workersService") WorkersImplService workersImplService) {
         this.workersImplService = workersImplService;
     }
 
     @PostMapping
-    public Response<WorkerModel> createOrUpdate(@Valid @RequestBody WorkerEntity workerEntity, BindingResult result) {
+    public Response<?> createOrUpdate(@Valid @RequestBody WorkerEntity workerEntity, BindingResult result) {
         log.info("POST request /workers");
-        Response<WorkerModel> response = new Response<>();
+//        Response<WorkerModel> response = new Response<>();
+
         if (result.hasErrors()) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(Status.NOT_CREATED.getName()).append(":");
             for (FieldError fieldError : result.getFieldErrors()) {
                 stringBuilder.append(fieldError.getField()).append("-").append(fieldError.getDefaultMessage()).append(".");
             }
-
-            response.setStatus(stringBuilder.toString());
-            response.setEntities(Collections.singletonList(workerMapper.toModel(workerEntity)));
             log.info("POST request hasErrors." + stringBuilder.toString());
+//            response.setStatus(stringBuilder.toString());
+            WorkerModel workerModel = workerMapper.toModel(workerEntity);
+//            response.setEntities(Collections.singletonList(workerMapper.toModel(workerEntity)));
+         return   response.getResponse(stringBuilder.toString(),Collections.singletonList(workerModel));
+
         } else {
-            WorkerModel workerModel = workersImplService.createOrUpdate(workerEntity);
-            response.setStatus(Status.CREATED.getName());
-            response.setEntities(Collections.singletonList(workerModel));
+            WorkerModel list = workersImplService.createOrUpdate(workerEntity);
+//            response.setStatus(Status.CREATED.getName());
+//            response.setEntities(Collections.singletonList(workerModel));
+          return response.getResponse(Status.CREATED.getName(),Collections.singletonList(list));
         }
-        return response;
     }
 
     @GetMapping
-    public Response<WorkerModel> getAll() {
+    public Response<?> getAll() {
         log.info("GET request /workers");
-        Response<WorkerModel> response = new Response<>();
-        response.setStatus(Status.OK.getName());
-        List<WorkerModel> list = workersImplService.getAll();
-        response.setEntities(list);
-        return response;
+        return response.getResponse(Status.OK.getName(),workersImplService.getAll());
     }
 
     @GetMapping(path = "/{id}")
-    public Response<WorkerModel> getWorkerById(@PathVariable("id") Long id) {
+    public Response<?> getWorkerById(@PathVariable("id") Long id) {
         log.info("GET request /workers/" + id);
-        Response<WorkerModel> response = new Response<>();
-        response.setStatus(Status.OK.getName());
-        response.setEntities(Collections.singletonList(workersImplService.getById(id)));
-        return response;
+        return response.getResponse(Status.OK.getName(),Collections.singletonList(workersImplService.getById(id)));
     }
 
     @DeleteMapping(path = "/{id}")
-    public Response<WorkerModel> deleteWorkerById(@PathVariable("id") Long id) {
+    public Response<?> deleteWorkerById(@PathVariable("id") Long id) {
         log.info("DELETE request /workers/" + id);
         WorkerModel workerModel = workersImplService.deleteById(id);
-        return new Response<>(Status.DELETE.getName(), Collections.singletonList(workerModel));
+        return response.getResponse(Status.DELETE.getName(),Collections.singletonList(workerModel));
     }
 }
 

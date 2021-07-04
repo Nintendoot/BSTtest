@@ -1,9 +1,11 @@
 package by.nintendo.service;
 
 import by.nintendo.entity.WorkedHoursEntity;
+import by.nintendo.exception.WorkerNotFoundException;
 import by.nintendo.mapper.WorkerHoursMapper;
 import by.nintendo.model.WorkedHoursModel;
 import by.nintendo.repository.WorkerHoursRepository;
+import by.nintendo.repository.WorkersRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,12 @@ import java.util.stream.Collectors;
 public class WorkerHoursService implements WorkerHoursImplService {
     private final WorkerHoursMapper workerHoursMapper;
     private final WorkerHoursRepository workerHoursRepository;
+    private final WorkersRepository workersRepository;
 
-    public WorkerHoursService(WorkerHoursMapper workerHoursMapper, WorkerHoursRepository workerHoursRepository) {
+    public WorkerHoursService(WorkerHoursMapper workerHoursMapper, WorkerHoursRepository workerHoursRepository, WorkersRepository workersRepository) {
         this.workerHoursMapper = workerHoursMapper;
         this.workerHoursRepository = workerHoursRepository;
+        this.workersRepository = workersRepository;
     }
 
     @Override
@@ -37,28 +41,39 @@ public class WorkerHoursService implements WorkerHoursImplService {
     @Override
     public List<WorkedHoursModel> getById(Long id) {
         log.info("Call method WorkedHoursService: getById(Id: " + id + ") ");
-        List<WorkedHoursEntity> time = workerHoursRepository.findAll().stream().filter(x -> x.getWorker().getId().equals(id)).collect(Collectors.toList());
+        if (workersRepository.existsById(id)) {
+            List<WorkedHoursEntity> time = workerHoursRepository.findAll().stream()
+                    .filter(x -> x.getWorker().getId().equals(id))
+                    .collect(Collectors.toList());
 
-        return time.stream().map(workerHoursMapper::toModel).collect(Collectors.toList());
+            return time.stream()
+                    .map(workerHoursMapper::toModel)
+                    .collect(Collectors.toList());
 
+        } else {
+
+            throw new WorkerNotFoundException("Worker with id: " + id + "not exist.");
+        }
     }
 
     @Override
-    public WorkedHoursModel deleteById(Long id) {
+    public List<WorkedHoursModel> deleteById(Long id) {
         log.info("Call method WorkedHoursService: getById(Id: " + id + ") ");
-//        Optional<WorkedHoursEntity> workedHours = workerHoursRepository.findById(id);
-//        if(workedHours.isPresent()){
-//
-//            workerHoursRepository.deleteById(id);
-//
-////            WorkedHoursModel departmentModel = workerHoursMapper.toModel(workedHours.get());
-////            WorkerEntity byId = workersRepository.getById(workedHours.get().getWorker().getId());
-////            byId.getWorkHours().remove(workedHours.get());
-////            workersRepository.save(byId);
-////            workerHoursRepository.deleteById(id);
-////            return departmentModel;
-//        }
-        return null;
+        if (workersRepository.existsById(id)) {
+            List<WorkedHoursEntity> collect = workerHoursRepository.findAll().stream()
+                    .filter(x -> x.getWorker().getId().equals(id))
+                    .collect(Collectors.toList());
+            for (WorkedHoursEntity workedHoursEntity : collect) {
+                workerHoursRepository.deleteById(workedHoursEntity.getId());
+            }
+            return collect.stream()
+                    .map(workerHoursMapper::toModel)
+                    .collect(Collectors.toList());
+
+        } else {
+
+            throw new WorkerNotFoundException("Worker with id: " + id + "not exist.");
+        }
     }
 
 

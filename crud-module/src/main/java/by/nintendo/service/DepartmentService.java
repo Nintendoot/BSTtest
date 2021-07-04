@@ -40,17 +40,19 @@ public class DepartmentService implements DepartmentImplService {
     @Override
     public List<DepartmentModel> getAll() {
         log.info("Call method DepartmentService: getAll()");
-        return departmentRepository.findAll().stream().map(departmentMapper::toModel).collect(Collectors.toList());
+        return departmentRepository.findAll().stream()
+                .map(departmentMapper::toModel)
+                .collect(Collectors.toList());
     }
 
     @Override
     public DepartmentModel getById(Long id) {
         log.info("Call method DepartmentService: getById(Id: " + id + ") ");
-        Optional<DepartmentEntity> worker = departmentRepository.findById(id);
-        if (worker.isPresent()) {
-            return departmentMapper.toModel(worker.get());
+        Optional<DepartmentEntity> department = departmentRepository.findById(id);
+        if (department.isPresent()) {
+            return departmentMapper.toModel(department.get());
         } else {
-            throw new DepartmentNotFoundException("Department not found.");
+            throw new DepartmentNotFoundException("Department with id: "+id+" not exist.");
         }
     }
 
@@ -58,9 +60,12 @@ public class DepartmentService implements DepartmentImplService {
     public DepartmentModel deleteById(Long id) {
         log.info("Call method DepartmentService: deleteById(Id: " + id + ") ");
         Optional<DepartmentEntity> department = departmentRepository.findById(id);
-        DepartmentModel departmentModel = departmentMapper.toModel(department.get());
-        departmentRepository.delete(department.get());
-        return departmentModel;
-
+        if(department.isPresent()){
+            DepartmentModel departmentModel = departmentMapper.toModel(department.get());
+            departmentRepository.delete(department.get());
+            return departmentModel;
+        }else{
+            throw new DepartmentNotFoundException("Department with id: "+id+" not exist.");
+        }
     }
 }

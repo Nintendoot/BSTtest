@@ -13,5 +13,5 @@ public interface WorkerHoursImplService {
 
     List<WorkedHoursModel> getById(Long id);
 
-    WorkedHoursModel deleteById(Long id);
+    List<WorkedHoursModel> deleteById(Long id);
 }
