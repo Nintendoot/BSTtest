@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -22,10 +23,10 @@ public class WorkedHoursEntity extends AbstractEntity {
     private Long id;
 
     @Column(name = "start_work")
-    private LocalDateTime startWork;
+    private Date startWork;
 
     @Column(name = "end_work")
-    private LocalDateTime endWork;
+    private Date endWork;
 
     @ManyToOne
     @JoinColumn(name = "worker_id")

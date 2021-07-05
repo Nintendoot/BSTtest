@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
@@ -25,8 +26,8 @@ class WorkerHoursServiceTest {
         assertNotNull(workerHoursService.getAll());
         assertEquals(workerHoursService.getAll().size(), 4);
         WorkedHoursEntity workedHoursEntity=new WorkedHoursEntity();
-        workedHoursEntity.setStartWork(LocalDateTime.now());
-        workedHoursEntity.setEndWork(LocalDateTime.now());
+//        workedHoursEntity.setStartWork();
+//        workedHoursEntity.setEndWork("2021-07-02T19:17:12.936");
         workedHoursEntity.setWorker(workerEntity);
         workerHoursService.createOrUpdate(workedHoursEntity);
         assertNotNull(workerHoursService.getAll());
@@ -39,7 +40,7 @@ class WorkerHoursServiceTest {
         assertNotNull(workerHoursService.getAll());
         assertEquals(workerHoursService.getAll().size(), 7);
         workersRepository.getById(1L);
-        workerHoursService.createOrUpdate(new WorkedHoursEntity(null,LocalDateTime.now(),LocalDateTime.now(),workerEntity));
+        workerHoursService.createOrUpdate(new WorkedHoursEntity(null,null,null,workerEntity));
         assertEquals(workerHoursService.getAll().size(), 8);
 
     }

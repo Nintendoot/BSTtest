@@ -63,7 +63,7 @@ public class DepartmentController {
     }
 
     @GetMapping
-    public Response<?> getAll() {
+    public Response<?>getAll() {
         log.info("GET request /department");
         List<DepartmentModel> collect = departmentImplService.getAll().stream().map(departmentMapper::toModel).collect(Collectors.toList());
         return response.getResponse(Status.OK.getName(), collect);

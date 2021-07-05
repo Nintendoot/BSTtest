@@ -1,20 +1,20 @@
 package by.nintendo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
-
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DepartmentModel extends AbstractModel{
-
+public class WorkerReportModel {
     private String name;
 
-    private List<WorkerModel> workers;
+    private String lastName;
+
+    private List<String> workHours;
 }
