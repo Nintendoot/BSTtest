@@ -30,5 +30,4 @@ public class DepartmentEntity extends AbstractEntity {
     @OneToMany(mappedBy = "department", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<WorkerEntity> workers;
 
-
 }

@@ -1,6 +1,5 @@
 package by.nintendo.mapper;
 
-import by.nintendo.entity.DepartmentEntity;
 import by.nintendo.model.DepartmentModel;
 import by.nintendo.model.DepartmentReportModel;
 import by.nintendo.model.WorkerModel;
@@ -14,19 +13,14 @@ import java.util.List;
 @Component
 public class DepartmentModelMapper {
 
-    private final DepartmentMapper departmentMapper;
-
-    public DepartmentModelMapper(DepartmentMapper departmentMapper) {
-        this.departmentMapper = departmentMapper;
-    }
 
     public List<DepartmentReportModel> toReportModule(List<DepartmentModel> listModel) {
         log.info("Method toReportModule mapped DepartmentModel.");
         List<DepartmentReportModel> ds = new ArrayList<>();
         for (DepartmentModel dd : listModel) {
-            DepartmentEntity d = departmentMapper.toEntity(dd);
+//            DepartmentEntity d = departmentMapper.toEntity(dd);
             DepartmentReportModel departReport = new DepartmentReportModel();
-            departReport.setName(d.getName());
+            departReport.setName(dd.getName());
             List<String> s = new ArrayList<>();
             for (WorkerModel w : dd.getWorkers()) {
                 StringBuilder worker = new StringBuilder();
