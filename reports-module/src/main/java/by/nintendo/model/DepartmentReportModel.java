@@ -15,11 +15,4 @@ public class DepartmentReportModel{
     private String name;
     private List<String> workers;
 
-    @Override
-    public String toString() {
-        return "DepartReport{" +
-                "name='" + name + '\'' +
-                ", workerName=" + workers +
-                '}';
-    }
 }
