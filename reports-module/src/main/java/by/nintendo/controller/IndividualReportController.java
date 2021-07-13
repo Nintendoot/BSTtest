@@ -3,6 +3,7 @@ package by.nintendo.controller;
 import by.nintendo.Response;
 import by.nintendo.Status;
 import by.nintendo.mapper.WorkerModelMapper;
+import by.nintendo.model.DepartmentModel;
 import by.nintendo.model.WorkerModel;
 import by.nintendo.model.WorkerReportModel;
 import by.nintendo.util.ModelReportSerializ;
@@ -13,6 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -31,15 +37,15 @@ public class IndividualReportController {
     }
 
     @GetMapping(path = "/{id}")
-    public Status reportWorkerById(@PathVariable("id") Long id) {
+    public Status reportWorkerById(@PathVariable("id") Long id) throws IOException {
         log.info("GET request /report/" + id);
-        String fileName = "Individual[" + id + "].txt";
+        String fileName ="Individual[" + id + "].txt";
 
-        Response<?> response = rp.getResponse(url);
-        List<WorkerModel> entities = (List<WorkerModel>) response.getEntities();
-        WorkerReportModel worker = mapper.toReportModuleById(entities, id);
+        Response<?> response = rp.getResponse(url+id);
+        List<WorkerModel> entities = (List<WorkerModel>)response.getEntities();
+        WorkerReportModel worker = mapper.toReportModuleById(entities.get(0));
 
-        serializ.serializ("Name:" + worker.getName() + " Last Name: " + worker.getLastName(), fileName);
+        serializ.serializ("Name:" + worker.getName() + " Last Name: " + worker.getLastName(),fileName);
         for (String name : worker.getWorkHours()) {
             serializ.serializ(name, fileName);
         }
@@ -53,7 +59,7 @@ public class IndividualReportController {
 
         Response<?> response = rp.getResponse(url);
         List<WorkerModel> entities = (List<WorkerModel>) response.getEntities();
-        WorkerReportModel worker = mapper.toReportModuleById(entities, id);
+        WorkerReportModel worker = mapper.toReportModuleById(entities.get(0));
 
 
         System.out.println("Name:" + worker.getName() + " Last Name: " + worker.getLastName());

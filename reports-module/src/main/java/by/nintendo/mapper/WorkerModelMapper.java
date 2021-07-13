@@ -10,29 +10,21 @@ import java.util.List;
 @Slf4j
 @Component
 public class WorkerModelMapper {
-
-
-    public WorkerReportModel toReportModuleById(List<WorkerModel> listModel, Long id) {
+    public WorkerReportModel toReportModuleById(WorkerModel workerModel) {
         log.info("Method toReportModule mapped listModel");
 
         WorkerReportModel ds = new WorkerReportModel();
-
-        for (WorkerModel dd : listModel) {
-            if (dd.getId().equals(id)) {
-                ds.setName(dd.getName());
-                ds.setLastName(dd.getLastName());
+                ds.setName(workerModel.getName());
+                ds.setLastName(workerModel.getLastName());
                 List<String> s = new ArrayList<>();
 
-                for (WorkedHoursModel w : dd.getWorkHours()) {
+                for (WorkedHoursModel w : workerModel.getWorkHours()) {
                     StringBuilder time = new StringBuilder();
                     time.append("StartWork: ").append(w.getStartWork()).append("  EndWork ").append(w.getEndWork());
                     s.add(time.toString());
                 }
 
                 ds.setWorkHours(s);
-            }
-
-        }
         return ds;
 
     }
